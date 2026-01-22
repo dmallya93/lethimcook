@@ -33,6 +33,13 @@
             <version>${hibernate.validator.version}</version>
         </dependency>
 
+        <!-- Nullable annotations (JSR-305) -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
         <!-- Expression Language (required by Hibernate Validator) -->
         <dependency>
             <groupId>org.glassfish</groupId>

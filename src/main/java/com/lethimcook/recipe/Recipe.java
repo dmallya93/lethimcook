@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -29,9 +30,9 @@ import java.util.Map;
 public record Recipe(
     @Positive(message = "Servings must be positive") int servings,
     @NotNull(message = "Ingredients cannot be null") @Valid List<Ingredient> ingredients,
-    String name,
-    String prep_time,
-    Map<String, Object> additionalProperties
+    @Nullable String name,
+    @Nullable String prep_time,
+    @Nullable Map<String, Object> additionalProperties
 ) {
     /**
      * Compact constructor that validates required fields.
@@ -40,7 +41,7 @@ public record Recipe(
      * enforce constraints at construction time. The @Positive annotation provides additional
      * declarative validation for Bean Validation contexts.
      *
-     * @throws IllegalArgumentException if servings is not positive or if ingredients is null
+     * @throws IllegalArgumentException if servings is not positive, if ingredients is null, or if ingredients is empty
      */
     public Recipe {
         if (servings <= 0) {
@@ -49,8 +50,9 @@ public record Recipe(
         if (ingredients == null) {
             throw new IllegalArgumentException("Ingredients cannot be null");
         }
-        // Note: The Python code allows empty ingredients list (test_empty_ingredients_list
-        // in test_recipe.py lines 104-112). We only check for null, not empty.
+        if (ingredients.isEmpty()) {
+            throw new IllegalArgumentException("Recipe must have at least one ingredient");
+        }
     }
 
     /**

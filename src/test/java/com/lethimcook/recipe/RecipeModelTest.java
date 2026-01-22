@@ -112,13 +112,12 @@ class RecipeModelTest {
         }
 
         @Test
-        @DisplayName("creates recipe with empty ingredients list")
+        @DisplayName("throws exception for empty ingredients list")
         void testEmptyIngredientsList() {
-            // Per test_recipe.py line 104-112, empty ingredients list is allowed
-            Recipe recipe = new Recipe(4, List.of());
-
-            assertThat(recipe.servings()).isEqualTo(4);
-            assertThat(recipe.ingredients()).isEmpty();
+            // Per task specification, empty ingredients list should throw exception
+            assertThatThrownBy(() -> new Recipe(4, List.of()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Recipe must have at least one ingredient");
         }
 
         @Test

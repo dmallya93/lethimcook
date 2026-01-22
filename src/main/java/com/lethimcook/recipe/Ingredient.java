@@ -1,6 +1,7 @@
 package com.lethimcook.recipe;
 
 import jakarta.validation.constraints.NotBlank;
+import javax.annotation.Nullable;
 
 /**
  * A recipe ingredient with optional amount and note.
@@ -20,10 +21,10 @@ import jakarta.validation.constraints.NotBlank;
  * @param note Optional note about the ingredient (e.g., "all-purpose", "chopped")
  */
 public record Ingredient(
-    Double amount,
+    @Nullable Double amount,
     @NotBlank(message = "Unit cannot be blank") String unit,
     @NotBlank(message = "Name cannot be blank") String name,
-    String note
+    @Nullable String note
 ) {
     /**
      * Compact constructor that validates required fields.
