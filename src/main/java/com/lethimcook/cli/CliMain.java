@@ -1,6 +1,6 @@
 package com.lethimcook.cli;
 
-import com.lethimcook.core.Converter;
+import com.lethimcook.natural.NaturalLanguageConverter;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -10,15 +10,15 @@ import java.util.concurrent.Callable;
 /**
  * Command-line interface for the lethimcook library.
  * <p>
- * For Milestone 1, this CLI accepts programmatic API-style invocations rather than
- * natural language queries. Natural language parsing will be integrated in Milestone 2.
+ * This CLI accepts natural language conversion queries and delegates parsing
+ * and conversion to the NaturalLanguageConverter.
  * </p>
  * <p>
  * Usage examples:
  * <pre>
- *   java -jar lethimcook-cli.jar convert 2 cups ml
- *   java -jar lethimcook-cli.jar convert 32 fahrenheit celsius
- *   java -jar lethimcook-cli.jar convert 16 oz grams
+ *   java -jar lethimcook-cli.jar "2 cups to ml"
+ *   java -jar lethimcook-cli.jar "convert 1 pound to grams"
+ *   java -jar lethimcook-cli.jar "how many ml in 3 teaspoons"
  * </pre>
  * </p>
  */
@@ -26,10 +26,15 @@ import java.util.concurrent.Callable;
     name = "lethimcook",
     mixinStandardHelpOptions = true,
     version = "1.0.0",
-    description = "Unit Conversion Library - Convert between volume, weight, and temperature units",
-    subcommands = {CliMain.ConvertCommand.class}
+    description = "Unit Conversion Library - Natural language unit conversions"
 )
 public class CliMain implements Callable<Integer> {
+
+    @Parameters(
+        arity = "1..*",
+        description = "Conversion query (e.g., '2 cups to ml', 'convert 1 pound to grams', 'how many ml in 3 teaspoons')"
+    )
+    private String[] query;
 
     /**
      * Main entry point for the CLI.
@@ -43,72 +48,22 @@ public class CliMain implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        // When no subcommand is provided, show usage information
-        System.out.println("LetHimCook - Unit Conversion Library");
-        System.out.println();
-        System.out.println("Usage:");
-        System.out.println("  java -jar lethimcook-cli.jar convert <value> <fromUnit> <toUnit>");
-        System.out.println();
-        System.out.println("Examples:");
-        System.out.println("  java -jar lethimcook-cli.jar convert 2 cups ml");
-        System.out.println("  java -jar lethimcook-cli.jar convert 32 fahrenheit celsius");
-        System.out.println("  java -jar lethimcook-cli.jar convert 16 oz grams");
-        System.out.println();
-        System.out.println("Supported units:");
-        System.out.println("  Volume: tsp, tbsp, fl oz, cup, pint, quart, gallon, ml, liter");
-        System.out.println("  Weight: oz, pound, gram, kilogram");
-        System.out.println("  Temperature: fahrenheit, celsius, kelvin");
-        System.out.println();
-        System.out.println("Use --help for more information.");
-        return 0;
-    }
+        // When no query is provided, Picocli will show usage automatically
+        // due to arity = "1..*" requirement
 
-    /**
-     * Subcommand for performing unit conversions.
-     */
-    @Command(
-        name = "convert",
-        description = "Convert a value from one unit to another"
-    )
-    static class ConvertCommand implements Callable<Integer> {
+        // Join all query words with spaces
+        String queryText = String.join(" ", query);
 
-        @Parameters(
-            index = "0",
-            description = "The numeric value to convert"
-        )
-        private double value;
-
-        @Parameters(
-            index = "1",
-            description = "The source unit (e.g., cups, grams, fahrenheit)"
-        )
-        private String fromUnit;
-
-        @Parameters(
-            index = "2",
-            description = "The target unit (e.g., ml, oz, celsius)"
-        )
-        private String toUnit;
-
-        @Override
-        public Integer call() {
-            try {
-                double result = Converter.convert(value, fromUnit, toUnit);
-
-                // Format output with 2 decimal places (matching Python default)
-                // Remove trailing zeros and decimal point if not needed
-                String formatted = String.format("%.2f", result);
-                formatted = formatted.replaceAll("\\.?0+$", "");
-
-                System.out.println(formatted);
-                return 0;
-            } catch (IllegalArgumentException e) {
-                System.err.println("Error: " + e.getMessage());
-                return 1;
-            } catch (Exception e) {
-                System.err.println("Unexpected error: " + e.getMessage());
-                return 1;
-            }
+        try {
+            // Delegate to NaturalLanguageConverter for parsing and conversion
+            String result = NaturalLanguageConverter.convertNatural(queryText);
+            System.out.println(result);
+            return 0;
+        } catch (IllegalArgumentException e) {
+            // Print error to stderr and return non-zero exit code
+            // Matching Python CLI format: "Error: {message}"
+            System.err.println("Error: " + e.getMessage());
+            return 1;
         }
     }
 }
