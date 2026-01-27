@@ -1,21 +1,32 @@
 package io.github.lethimcook.units;
 
-import static java.util.Map.entry;
-
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 /**
- * Constants class containing unit conversion factors and type mappings.
- * All conversion factors are relative to base units (ml for volume, g for weight).
- * All map keys are lowercase to ensure case-insensitive matching.
+ * Unit conversion constants and utilities.
+ * <p>
+ * This class provides immutable maps of conversion factors and unit type mappings
+ * for all supported units. Conversion factors represent multipliers to convert
+ * to base units (milliliters for volume, grams for weight, count for dimensionless).
  */
 public final class Units {
 
     /**
+     * Base units for each unit type.
+     */
+    public static final Map<UnitType, String> BASE_UNITS = Map.ofEntries(
+        entry(UnitType.VOLUME, "ml"),
+        entry(UnitType.WEIGHT, "g"),
+        entry(UnitType.TEMPERATURE, "celsius"),
+        entry(UnitType.COUNT, "count")
+    );
+
+    /**
      * Conversion factors to base units.
-     * Volume units convert to milliliters (ml).
-     * Weight units convert to grams (g).
-     * Count units are dimensionless (factor = 1.0).
+     * For volume and weight: multiply by this factor to get the base unit value.
+     * Keys are normalized to lowercase.
      */
     public static final Map<String, Double> CONVERSIONS = Map.ofEntries(
         // Volume (to milliliters)
@@ -69,8 +80,8 @@ public final class Units {
     );
 
     /**
-     * Mapping of unit strings to their types.
-     * Used to validate unit compatibility before conversion.
+     * Unit type mapping.
+     * Maps unit strings (lowercase) to their corresponding UnitType.
      */
     public static final Map<String, UnitType> UNIT_TYPES = Map.ofEntries(
         // Volume
@@ -131,26 +142,36 @@ public final class Units {
         entry("whole", UnitType.COUNT)
     );
 
-    // Private constructor to prevent instantiation
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private Units() {
         throw new AssertionError("Utility class should not be instantiated");
     }
 
     /**
-     * Normalize a unit string by converting to lowercase and trimming whitespace.
+     * Normalizes a unit string to lowercase and strips whitespace.
+     * <p>
+     * This method should be used before looking up units in the CONVERSIONS
+     * or UNIT_TYPES maps to ensure consistent key matching.
      *
      * @param unit the unit string to normalize
-     * @return the normalized unit string
+     * @return the normalized unit string (lowercase, trimmed)
      */
     public static String normalizeUnit(String unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
         return unit.toLowerCase().strip();
     }
 
     /**
-     * Get the type of a unit.
+     * Gets the UnitType for a given unit string.
+     * <p>
+     * The unit string is normalized (lowercase, trimmed) before lookup.
      *
-     * @param unit the unit string (will be normalized)
-     * @return the UnitType
+     * @param unit the unit string to look up
+     * @return the UnitType for the unit
      * @throws IllegalArgumentException if the unit is unknown
      */
     public static UnitType getUnitType(String unit) {

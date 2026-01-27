@@ -10,25 +10,38 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# IDE
+# IntelliJ IDEA
 .idea/
-*.iml
 *.iws
+*.iml
 *.ipr
-.vscode/
-.settings/
-.project
+
+# Eclipse
 .classpath
+.project
+.settings/
 .factorypath
 
-# OS
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# macOS
 .DS_Store
+
+# Windows
 Thumbs.db
 
-# Logs
+# Log files
 *.log
 
-# Compiled class files
+# Java compiled files
 *.class
 
 # Package files
