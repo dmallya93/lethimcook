@@ -7,7 +7,7 @@
 
     <groupId>io.github.lethimcook</groupId>
     <artifactId>lethimcook</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>lethimcook</name>
@@ -132,7 +132,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <configuration>
                     <show>public</show>
                 </configuration>

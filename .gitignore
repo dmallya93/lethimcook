@@ -20,6 +20,7 @@ buildNumber.properties
 .classpath
 .project
 .settings/
+.factorypath
 
 # NetBeans
 /nbproject/private/
@@ -33,6 +34,9 @@ buildNumber.properties
 
 # macOS
 .DS_Store
+
+# Windows
+Thumbs.db
 
 # Log files
 *.log
