@@ -9,12 +9,18 @@ import com.lethimcook.units.UnitType;
  *
  * This class mirrors the functionality of Python's converter.py module.
  * It handles volume, weight, temperature, and count conversions.
+ *
+ * This class is stateless and thread-safe. It can be instantiated and used
+ * as an instance, or its static methods can be called directly.
  */
 public final class UnitConverter {
 
-    // Private constructor to prevent instantiation (stateless utility class)
-    private UnitConverter() {
-        throw new UnsupportedOperationException("UnitConverter is a utility class and cannot be instantiated");
+    /**
+     * Constructs a new UnitConverter instance.
+     * The converter is stateless and thread-safe.
+     */
+    public UnitConverter() {
+        // Default constructor for instantiation
     }
 
     /**
@@ -26,7 +32,7 @@ public final class UnitConverter {
      * @return the converted value
      * @throws IllegalArgumentException if units are incompatible or unknown
      */
-    public static double convert(double value, String fromUnit, String toUnit) {
+    public double convert(double value, String fromUnit, String toUnit) {
         // Normalize unit strings
         String normalizedFromUnit = ConversionRegistry.normalizeUnit(fromUnit);
         String normalizedToUnit = ConversionRegistry.normalizeUnit(toUnit);
