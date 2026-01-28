@@ -1,14 +1,30 @@
 package com.lethimcook;
 
+import com.lethimcook.converter.UnitConverter;
+
 /**
  * Main facade class for the LetHimCook library.
  * Provides a unified API for unit conversions, natural language parsing,
  * and recipe scaling operations.
  *
- * This is a placeholder implementation that will be extended in future milestones
- * with the actual conversion logic.
+ * This facade mirrors the Python __init__.py exports and provides a clean,
+ * user-friendly API for the library.
  */
 public class LetHimCook {
+
+    /**
+     * Convert a value from one unit to another.
+     * This is the primary conversion method for the library.
+     *
+     * @param value the numeric value to convert
+     * @param fromUnit the source unit
+     * @param toUnit the target unit
+     * @return the converted value
+     * @throws IllegalArgumentException if units are incompatible or unknown
+     */
+    public static double convert(double value, String fromUnit, String toUnit) {
+        return UnitConverter.convert(value, fromUnit, toUnit);
+    }
 
     /**
      * Returns the version of the LetHimCook library.

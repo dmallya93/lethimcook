@@ -3,11 +3,11 @@ package com.lethimcook;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 /**
  * Test class for the LetHimCook facade.
- * This placeholder test verifies that the basic project structure and
- * test infrastructure are working correctly.
+ * Verifies that the public API exposes the core conversion functionality.
  */
 class LetHimCookTest {
 
@@ -35,5 +35,12 @@ class LetHimCookTest {
         LetHimCook letHimCook = new LetHimCook();
 
         assertThat(letHimCook).isNotNull();
+    }
+
+    @Test
+    void testConvertMethodExposed() {
+        // Test that the facade exposes the convert method
+        double result = LetHimCook.convert(2, "cups", "ml");
+        assertThat(result).isCloseTo(473.176, within(0.01));
     }
 }
