@@ -24,10 +24,14 @@ public final class Cli {
             System.exit(1);
         }
 
-        // Natural language parsing will be implemented in Milestone 2.
-        // For now, print usage and exit.
-        System.out.println("Natural language conversion not yet implemented.");
-        System.out.println("Run without arguments to see usage information.");
-        System.exit(1);
+        String query = String.join(" ", args);
+
+        try {
+            String result = Natural.convertNatural(query);
+            System.out.println(result);
+        } catch (RuntimeException ex) {
+            System.err.println("Error: " + ex.getMessage());
+            System.exit(1);
+        }
     }
 }
