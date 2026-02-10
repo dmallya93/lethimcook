@@ -1,0 +1,27 @@
+# Maven
+target/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dependency-reduced-pom.xml
