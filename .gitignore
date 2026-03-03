@@ -73,6 +73,7 @@ target/
 *.ear
 *.nar
 .gradle/
+!gradle/wrapper/gradle-wrapper.jar
 .mvn/wrapper/maven-wrapper.jar
 hs_err_pid*
 replay_pid*
