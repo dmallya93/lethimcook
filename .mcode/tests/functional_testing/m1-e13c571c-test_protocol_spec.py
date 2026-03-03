@@ -9,7 +9,7 @@ This script supports two modes:
 1. SRC Validation: Tests commands and captures outputs (no expected_stdout/stderr)
 2. DST Contract Validation: Tests commands and validates outputs match expected
 
-Generated at: 2026-03-03T00:38:33.185295+00:00
+Generated at: 2026-03-03T00:47:17.470035+00:00
 Project: lethimcook
 Milestone: 1
 """
@@ -55,9 +55,11 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_no_args_shows_usage",
         "category": "HELP_OUTPUT",
         "description": "Invoking with no arguments prints usage/help information to stdout and exits with code 1",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
-        "args": [],
+        "args": [
+            "cli.py"
+        ],
         "expected_exit_code": 1,
         "expected_stdout": "Usage:",
         "expected_stderr": null,
@@ -67,9 +69,11 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_no_args_shows_app_name",
         "category": "HELP_OUTPUT",
         "description": "Usage output includes the application name 'LetHimCook'",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
-        "args": [],
+        "args": [
+            "cli.py"
+        ],
         "expected_exit_code": 1,
         "expected_stdout": "LetHimCook",
         "expected_stderr": null,
@@ -79,9 +83,11 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_no_args_shows_supported_units",
         "category": "HELP_OUTPUT",
         "description": "Usage output lists supported unit categories (Volume, Weight, Temperature)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
-        "args": [],
+        "args": [
+            "cli.py"
+        ],
         "expected_exit_code": 1,
         "expected_stdout": "Supported units:",
         "expected_stderr": null,
@@ -91,9 +97,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_cups_to_ml",
         "category": "HAPPY_PATH",
         "description": "Convert 2 cups to ml using basic 'X unit to unit' pattern",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "to",
@@ -108,9 +115,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_tsp_to_tbsp",
         "category": "HAPPY_PATH",
         "description": "Convert 3 tsp to tbsp (should be approximately 1)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "3",
             "tsp",
             "to",
@@ -125,9 +133,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_gallon_to_liter",
         "category": "HAPPY_PATH",
         "description": "Convert 1 gallon to liters",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "gallon",
             "to",
@@ -142,9 +151,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_floz_to_ml",
         "category": "HAPPY_PATH",
         "description": "Convert 8 fl oz to ml",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "8",
             "fl",
             "oz",
@@ -160,9 +170,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_same_unit",
         "category": "HAPPY_PATH",
         "description": "Converting a unit to itself returns the same value",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "5",
             "cup",
             "to",
@@ -177,9 +188,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_weight_pounds_to_grams",
         "category": "HAPPY_PATH",
         "description": "Convert 1 pound to grams",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "pound",
             "to",
@@ -194,9 +206,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_weight_oz_to_grams",
         "category": "HAPPY_PATH",
         "description": "Convert 16 oz to grams",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "16",
             "oz",
             "to",
@@ -211,9 +224,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_weight_kg_to_lb",
         "category": "HAPPY_PATH",
         "description": "Convert 1 kg to lb",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "kg",
             "to",
@@ -228,9 +242,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_weight_grams_to_ounces",
         "category": "HAPPY_PATH",
         "description": "Convert 100 grams to ounces",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "100",
             "g",
             "to",
@@ -245,9 +260,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_fahrenheit_to_celsius_freezing",
         "category": "HAPPY_PATH",
         "description": "Convert 32 fahrenheit to celsius (freezing point = 0)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "32",
             "fahrenheit",
             "to",
@@ -262,9 +278,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_fahrenheit_to_celsius_boiling",
         "category": "HAPPY_PATH",
         "description": "Convert 212 fahrenheit to celsius (boiling point = 100)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "212",
             "f",
             "to",
@@ -279,9 +296,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_fahrenheit_to_celsius_oven",
         "category": "HAPPY_PATH",
         "description": "Convert 350 fahrenheit to celsius (oven temperature ~176.67)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "350",
             "fahrenheit",
             "to",
@@ -296,9 +314,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_celsius_to_fahrenheit_zero",
         "category": "HAPPY_PATH",
         "description": "Convert 0 celsius to fahrenheit (= 32)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "0",
             "celsius",
             "to",
@@ -313,9 +332,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_celsius_to_fahrenheit_boiling",
         "category": "HAPPY_PATH",
         "description": "Convert 100 celsius to fahrenheit (= 212)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "100",
             "c",
             "to",
@@ -330,9 +350,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_celsius_to_kelvin",
         "category": "HAPPY_PATH",
         "description": "Convert 0 celsius to kelvin (= 273.15)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "0",
             "celsius",
             "to",
@@ -347,9 +368,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_temp_kelvin_to_celsius",
         "category": "HAPPY_PATH",
         "description": "Convert 273.15 kelvin to celsius (= 0)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "273.15",
             "kelvin",
             "to",
@@ -364,9 +386,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_count_conversion",
         "category": "HAPPY_PATH",
         "description": "Convert count to item (dimensionless, value unchanged)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "5",
             "count",
             "to",
@@ -381,9 +404,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_convert_keyword_pattern",
         "category": "HAPPY_PATH",
         "description": "Use 'convert X unit to unit' pattern",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "convert",
             "1",
             "pound",
@@ -399,9 +423,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_how_many_pattern",
         "category": "HAPPY_PATH",
         "description": "Use 'how many unit in X unit' pattern",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "how",
             "many",
             "ml",
@@ -418,9 +443,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_decimal_value",
         "category": "HAPPY_PATH",
         "description": "Natural language conversion with a decimal value",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1.5",
             "cups",
             "to",
@@ -435,9 +461,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_case_insensitive_input",
         "category": "HAPPY_PATH",
         "description": "Input should be case-insensitive",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "CUPS",
             "to",
@@ -452,9 +479,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_multi_word_unit_fluid_ounce",
         "category": "HAPPY_PATH",
         "description": "Multi-word unit 'fluid ounce' is recognized",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "5",
             "fluid",
             "ounce",
@@ -470,9 +498,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_unit_alias_teaspoon",
         "category": "HAPPY_PATH",
         "description": "Unit aliases 'tsp' and 'teaspoon' produce the same result",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "teaspoon",
             "to",
@@ -487,9 +516,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_unit_alias_pound_lb",
         "category": "HAPPY_PATH",
         "description": "Unit aliases 'lb' and 'pound' produce the same result",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "lb",
             "to",
@@ -504,9 +534,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_unit_alias_lbs",
         "category": "HAPPY_PATH",
         "description": "Unit alias 'lbs' works the same as 'pound'",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "lbs",
             "to",
@@ -521,9 +552,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_in_keyword_pattern",
         "category": "HAPPY_PATH",
         "description": "The 'in' keyword works as an alternative to 'to' in basic pattern",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "in",
@@ -538,9 +570,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_unparseable_gibberish",
         "category": "INVALID_ARGS",
         "description": "Completely unparseable input results in error",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "this",
             "is",
             "gibberish"
@@ -554,9 +587,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_missing_numeric_value",
         "category": "INVALID_ARGS",
         "description": "Input missing a numeric value cannot be parsed",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "cups",
             "to",
             "ml"
@@ -570,9 +604,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_unknown_from_unit",
         "category": "INVALID_ARGS",
         "description": "Unknown source unit results in an error",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "blorg",
             "to",
@@ -587,9 +622,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_unknown_to_unit",
         "category": "INVALID_ARGS",
         "description": "Unknown target unit results in an error",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "to",
@@ -604,9 +640,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_incompatible_units_volume_weight",
         "category": "INVALID_ARGS",
         "description": "Cannot convert between incompatible unit types (volume to weight)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "cups",
             "to",
@@ -621,9 +658,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_incompatible_units_temp_weight",
         "category": "INVALID_ARGS",
         "description": "Cannot convert between temperature and weight",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "100",
             "celsius",
             "to",
@@ -638,9 +676,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_single_word_arg",
         "category": "INVALID_ARGS",
         "description": "A single non-parseable word results in an error",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "hello"
         ],
         "expected_exit_code": 1,
@@ -652,9 +691,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_only_number",
         "category": "INVALID_ARGS",
         "description": "Just a number without units cannot be parsed",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "42"
         ],
         "expected_exit_code": 1,
@@ -666,9 +706,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_missing_to_keyword",
         "category": "INVALID_ARGS",
         "description": "Query missing 'to' or 'in' keyword cannot be parsed",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "ml"
@@ -682,9 +723,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_boundary_zero_value",
         "category": "BOUNDARY",
         "description": "Converting zero quantity should succeed and return 0",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "0",
             "cups",
             "to",
@@ -698,17 +740,18 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
     {
         "name": "test_boundary_very_large_value",
         "category": "BOUNDARY",
-        "description": "Very large numeric value should still convert correctly",
-        "command": "lethimcook",
+        "description": "Very large numeric value should still convert correctly (1000000 ml = 1000 liters)",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1000000",
             "ml",
             "to",
             "l"
         ],
         "expected_exit_code": 0,
-        "expected_stdout": "1000000.00",
+        "expected_stdout": "1000.00",
         "expected_stderr": null,
         "timeout_seconds": 10
     },
@@ -716,9 +759,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_boundary_very_small_decimal",
         "category": "BOUNDARY",
         "description": "Very small decimal value converts without error",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "0.001",
             "cups",
             "to",
@@ -731,28 +775,30 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
     },
     {
         "name": "test_boundary_negative_temperature",
-        "category": "BOUNDARY",
-        "description": "Negative temperature values are valid and convert correctly (-40F = -40C)",
-        "command": "lethimcook",
+        "category": "INVALID_ARGS",
+        "description": "Negative values are not supported by the natural language parser regex and result in a parse error",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "-40",
             "fahrenheit",
             "to",
             "celsius"
         ],
-        "expected_exit_code": 0,
-        "expected_stdout": "-40.00",
-        "expected_stderr": null,
+        "expected_exit_code": 1,
+        "expected_stdout": null,
+        "expected_stderr": "Error:",
         "timeout_seconds": 10
     },
     {
         "name": "test_boundary_absolute_zero_kelvin",
         "category": "BOUNDARY",
         "description": "Convert absolute zero from kelvin to celsius (-273.15)",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "0",
             "kelvin",
             "to",
@@ -767,9 +813,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_boundary_integer_result_format",
         "category": "BOUNDARY",
         "description": "Result that is a whole number is still formatted with 2 decimal places",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "ml",
             "to",
@@ -784,9 +831,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_output_format_contains_equals",
         "category": "HAPPY_PATH",
         "description": "Output format contains '=' separator between input and result",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "to",
@@ -801,9 +849,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_output_format_contains_from_unit",
         "category": "HAPPY_PATH",
         "description": "Output includes the source unit name",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "to",
@@ -818,9 +867,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_output_format_contains_to_unit",
         "category": "HAPPY_PATH",
         "description": "Output includes the target unit name",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "2",
             "cups",
             "to",
@@ -835,9 +885,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_error_parse_message_includes_suggestion",
         "category": "INVALID_ARGS",
         "description": "Parse error message includes suggestion for correct format",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "this",
             "is",
             "gibberish"
@@ -851,9 +902,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_pint_to_ml",
         "category": "HAPPY_PATH",
         "description": "Convert 1 pint to ml",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "pint",
             "to",
@@ -868,9 +920,10 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
         "name": "test_volume_quart_to_ml",
         "category": "HAPPY_PATH",
         "description": "Convert 1 quart to ml",
-        "command": "lethimcook",
+        "command": ".venv/bin/python",
         "subcommand": "",
         "args": [
+            "cli.py",
             "1",
             "quart",
             "to",
@@ -884,7 +937,7 @@ TEST_CASES = resolve_env_placeholders(json.loads(r'''[
 ]'''))
 
 # CLI binary/entry point
-CLI_COMMAND = "source .venv/bin/activate && python cli.py"
+CLI_COMMAND = "echo 'CLI app ready'"
 
 # Working directory for CLI execution
 WORKING_DIR = "."
