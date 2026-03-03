@@ -44,12 +44,12 @@ public final class Converter {
      *         the two units belong to different categories (e.g. converting cups to grams)
      */
     public static double convert(double value, String fromUnit, String toUnit) {
-        String from = Units.normalizeUnit(fromUnit);
-        String to = Units.normalizeUnit(toUnit);
+        final String from = Units.normalizeUnit(fromUnit);
+        final String to = Units.normalizeUnit(toUnit);
 
         // Get unit types (throws if unknown)
-        UnitType fromType = Units.getUnitType(from);
-        UnitType toType = Units.getUnitType(to);
+        final UnitType fromType = Units.getUnitType(from);
+        final UnitType toType = Units.getUnitType(to);
 
         // Check compatibility
         if (fromType != toType) {
@@ -68,7 +68,7 @@ public final class Converter {
         }
 
         // Convert: from_unit -> base_unit -> to_unit
-        double baseValue = value * Units.CONVERSIONS.get(from);
+        final double baseValue = value * Units.CONVERSIONS.get(from);
         return baseValue / Units.CONVERSIONS.get(to);
     }
 
@@ -97,7 +97,7 @@ public final class Converter {
      */
     private static double convertTemperature(double value, String fromUnit, String toUnit) {
         // First convert to Celsius
-        double celsius = switch (fromUnit) {
+        final double celsius = switch (fromUnit) {
             case "celsius", "c" -> value;
             case "fahrenheit", "f" -> (value - 32) * 5.0 / 9.0;
             case "kelvin", "k" -> value - 273.15;

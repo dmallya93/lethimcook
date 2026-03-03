@@ -30,7 +30,7 @@ public final class Cli {
      *             (e.g. {@code "2", "cups", "to", "ml"})
      */
     public static void main(String[] args) {
-        int exitCode = run(args, System.out, System.err);
+        final int exitCode = run(args, System.out, System.err);
         System.exit(exitCode);
     }
 
@@ -75,7 +75,7 @@ public final class Cli {
             return 1;
         }
 
-        String query = String.join(" ", args);
+        final String query = String.join(" ", args);
 
         try {
             // NaturalConverter integration deferred to Milestone 2.

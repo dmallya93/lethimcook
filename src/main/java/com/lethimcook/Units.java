@@ -198,8 +198,8 @@ public final class Units {
      * @throws IllegalArgumentException if the unit is not recognized in {@link #UNIT_TYPES}
      */
     public static UnitType getUnitType(String unit) {
-        String normalized = normalizeUnit(unit);
-        UnitType type = UNIT_TYPES.get(normalized);
+        final String normalized = normalizeUnit(unit);
+        final UnitType type = UNIT_TYPES.get(normalized);
         if (type == null) {
             throw new IllegalArgumentException("Unknown unit: " + unit);
         }
