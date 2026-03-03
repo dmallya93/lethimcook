@@ -60,7 +60,7 @@ class RecipeScalingErrorsTest {
      */
     @Test
     void negativeNewServings() {
-        Recipe recipe = new Recipe(4, List.of());
+        final Recipe recipe = new Recipe(4, List.of());
         assertThatThrownBy(() -> RecipeScaler.scale(recipe, -2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("positive");

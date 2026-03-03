@@ -31,14 +31,14 @@ public final class RecipeScaler {
      *         updated serving count; name, prepTime, and other metadata are preserved
      * @throws IllegalArgumentException if {@code newServings} is zero or negative
      */
-    public static Recipe scale(Recipe recipe, int newServings) {
+    public static Recipe scale(final Recipe recipe, final int newServings) {
         if (newServings <= 0) {
             throw new IllegalArgumentException("New servings must be positive");
         }
 
-        double scaleFactor = (double) newServings / recipe.servings();
+        final double scaleFactor = (double) newServings / recipe.servings();
 
-        List<Ingredient> scaledIngredients = recipe.ingredients().stream()
+        final List<Ingredient> scaledIngredients = recipe.ingredients().stream()
                 .map(ingredient -> scaleIngredient(ingredient, scaleFactor))
                 .toList();
 
@@ -57,11 +57,11 @@ public final class RecipeScaler {
      * @param scaleFactor the multiplication factor
      * @return a new ingredient with the scaled amount, or the original if amount is null
      */
-    private static Ingredient scaleIngredient(Ingredient ingredient, double scaleFactor) {
+    private static Ingredient scaleIngredient(final Ingredient ingredient, final double scaleFactor) {
         if (ingredient.amount() == null) {
             return ingredient;
         }
-        double scaledAmount = ingredient.amount() * scaleFactor;
+        final double scaledAmount = ingredient.amount() * scaleFactor;
         return new Ingredient(scaledAmount, ingredient.unit(), ingredient.name(), ingredient.note());
     }
 }

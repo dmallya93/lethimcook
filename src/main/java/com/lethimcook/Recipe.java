@@ -55,7 +55,7 @@ public record Recipe(
      * @param servings    the number of servings (must be &gt; 0)
      * @param ingredients the list of ingredients (must not be null)
      */
-    public Recipe(int servings, List<Ingredient> ingredients) {
+    public Recipe(final int servings, final List<Ingredient> ingredients) {
         this(servings, ingredients, null, null);
     }
 }

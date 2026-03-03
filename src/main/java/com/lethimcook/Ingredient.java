@@ -45,7 +45,7 @@ public record Ingredient(
      * @param unit   the measurement unit (required)
      * @param name   the ingredient name (required)
      */
-    public Ingredient(Double amount, String unit, String name) {
+    public Ingredient(final Double amount, final String unit, final String name) {
         this(amount, unit, name, null);
     }
 }
