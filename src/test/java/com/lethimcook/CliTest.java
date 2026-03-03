@@ -9,12 +9,13 @@ import java.io.PrintStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for the CLI skeleton ({@link Cli}).
+ * Tests for the CLI ({@link Cli}).
  * <p>
- * In Milestone 1 the CLI is a skeleton: it prints usage when no arguments are
- * given and outputs a "not yet implemented" message when arguments are provided.
- * Full integration tests with actual conversion queries are deferred to
- * Milestone 2.
+ * When no arguments are provided, the CLI prints usage information and exits
+ * with code 1. When arguments are provided, they are joined into a query
+ * string and passed to {@link NaturalConverter#convertNatural(String)}.
+ * Valid queries produce output on stdout (exit code 0); invalid queries
+ * produce error messages on stderr (exit code 1).
  */
 class CliTest {
 
@@ -142,112 +143,126 @@ class CliTest {
     }
 
     // -----------------------------------------------------------------------
-    // With-arguments tests (not yet implemented placeholder)
+    // With-arguments tests: successful conversions
     // -----------------------------------------------------------------------
 
     @Test
-    void singleArg_returnsExitCode1() {
-        int exitCode = Cli.run(new String[]{"hello"}, out, err);
-        assertThat(exitCode).isEqualTo(1);
+    void conversionQuery_cupsToMl_returnsExitCode0() {
+        final int exitCode = Cli.run(new String[]{"2", "cups", "to", "ml"}, out, err);
+        assertThat(exitCode).isEqualTo(0);
     }
 
     @Test
-    void singleArg_printsNotYetImplementedToStderr() {
-        Cli.run(new String[]{"hello"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-    }
-
-    @Test
-    void singleArg_includesQueryInErrorMessage() {
-        Cli.run(new String[]{"hello"}, out, err);
-        assertThat(stderr()).contains("Query: hello");
-    }
-
-    @Test
-    void singleArg_writesNothingToStdout() {
-        Cli.run(new String[]{"hello"}, out, err);
-        assertThat(stdout()).isEmpty();
-    }
-
-    @Test
-    void multipleArgs_areJoinedIntoSingleQuery() {
+    void conversionQuery_cupsToMl_printsResultToStdout() {
         Cli.run(new String[]{"2", "cups", "to", "ml"}, out, err);
-        assertThat(stderr()).contains("Query: 2 cups to ml");
+        assertThat(stdout()).contains("2 cups");
+        assertThat(stdout()).contains("473");
+        assertThat(stdout()).contains("ml");
     }
 
     @Test
-    void multipleArgs_returnsExitCode1() {
-        int exitCode = Cli.run(new String[]{"2", "cups", "to", "ml"}, out, err);
-        assertThat(exitCode).isEqualTo(1);
-    }
-
-    @Test
-    void multipleArgs_writesNothingToStdout() {
-        Cli.run(new String[]{"convert", "1", "pound", "to", "grams"}, out, err);
-        assertThat(stdout()).isEmpty();
-    }
-
-    @Test
-    void conversionQuery_cupsToMl() {
+    void conversionQuery_cupsToMl_writesNothingToStderr() {
         Cli.run(new String[]{"2", "cups", "to", "ml"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-        assertThat(stderr()).contains("Query: 2 cups to ml");
+        assertThat(stderr()).isEmpty();
     }
 
     @Test
     void conversionQuery_poundsToGrams() {
-        Cli.run(new String[]{"convert", "1", "pound", "to", "grams"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-        assertThat(stderr()).contains("Query: convert 1 pound to grams");
+        final int exitCode = Cli.run(new String[]{"convert", "1", "pound", "to", "grams"}, out, err);
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(stdout()).contains("1 pound");
+        assertThat(stdout()).contains("453");
+        assertThat(stdout()).contains("grams");
+        assertThat(stderr()).isEmpty();
     }
 
     @Test
     void conversionQuery_temperatureQuery() {
-        Cli.run(new String[]{"100", "fahrenheit", "to", "celsius"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-        assertThat(stderr()).contains("Query: 100 fahrenheit to celsius");
+        final int exitCode = Cli.run(new String[]{"100", "fahrenheit", "to", "celsius"}, out, err);
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(stdout()).contains("100 fahrenheit");
+        assertThat(stdout()).contains("celsius");
+        assertThat(stderr()).isEmpty();
     }
 
     @Test
     void conversionQuery_howManyPattern() {
-        Cli.run(new String[]{"how", "many", "ml", "in", "3", "teaspoons"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-        assertThat(stderr()).contains("Query: how many ml in 3 teaspoons");
+        final int exitCode = Cli.run(new String[]{"how", "many", "ml", "in", "3", "teaspoons"}, out, err);
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(stdout()).contains("3 teaspoons");
+        assertThat(stdout()).contains("ml");
+        assertThat(stderr()).isEmpty();
     }
 
     @Test
-    void singleWordArg_producesNotYetImplemented() {
-        Cli.run(new String[]{"test"}, out, err);
-        assertThat(stderr()).contains("not yet implemented");
-        assertThat(stderr()).contains("Query: test");
+    void multipleArgs_areJoinedIntoSingleQuery() {
+        // "2 cups to ml" should be joined and produce a valid conversion
+        final int exitCode = Cli.run(new String[]{"2", "cups", "to", "ml"}, out, err);
+        assertThat(exitCode).isEqualTo(0);
+        assertThat(stdout()).contains("2 cups");
+    }
+
+    // -----------------------------------------------------------------------
+    // With-arguments tests: error cases
+    // -----------------------------------------------------------------------
+
+    @Test
+    void invalidQuery_returnsExitCode1() {
+        final int exitCode = Cli.run(new String[]{"hello"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
     }
 
     @Test
-    void argWithSpecialCharacters_isPassedThrough() {
-        Cli.run(new String[]{"1.5", "cups"}, out, err);
-        assertThat(stderr()).contains("Query: 1.5 cups");
+    void invalidQuery_printsErrorToStderr() {
+        Cli.run(new String[]{"hello"}, out, err);
+        assertThat(stderr()).contains("Error:");
+    }
+
+    @Test
+    void invalidQuery_writesNothingToStdout() {
+        Cli.run(new String[]{"hello"}, out, err);
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void singleWordArg_producesError() {
+        final int exitCode = Cli.run(new String[]{"test"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void invalidUnit_producesError() {
+        final int exitCode = Cli.run(new String[]{"2", "blorg", "to", "ml"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
     }
 
     @Test
     void emptyStringArg_treatedAsArgPresent() {
         // An empty-string argument still counts as an argument (args.length > 0),
-        // so the CLI should not print usage but instead process the (blank) query.
-        int exitCode = Cli.run(new String[]{""}, out, err);
+        // so the CLI should not print usage but instead attempt to process the query.
+        final int exitCode = Cli.run(new String[]{""}, out, err);
         assertThat(exitCode).isEqualTo(1);
         assertThat(stdout()).isEmpty();
-        assertThat(stderr()).contains("not yet implemented");
     }
 
     @Test
-    void multipleEmptyArgs_joinedWithSpaces() {
-        Cli.run(new String[]{"", ""}, out, err);
-        assertThat(stderr()).contains("Query:  ");
+    void incompleteQuery_producesError() {
+        // "1.5 cups" has no target unit, so it cannot be parsed
+        final int exitCode = Cli.run(new String[]{"1.5", "cups"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
     }
 
     @Test
-    void longQuery_isFullyPreserved() {
-        String[] args = {"this", "is", "a", "very", "long", "query", "with", "many", "words"};
-        Cli.run(args, out, err);
-        assertThat(stderr()).contains("Query: this is a very long query with many words");
+    void longGibberishQuery_producesError() {
+        final String[] args = {"this", "is", "a", "very", "long", "query", "with", "many", "words"};
+        final int exitCode = Cli.run(args, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
     }
 }
