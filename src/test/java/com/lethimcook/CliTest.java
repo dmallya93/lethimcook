@@ -265,4 +265,73 @@ class CliTest {
         assertThat(stderr()).contains("Error:");
         assertThat(stdout()).isEmpty();
     }
+
+    // -----------------------------------------------------------------------
+    // Additional error edge cases
+    // -----------------------------------------------------------------------
+
+    @Test
+    void whitespaceOnlyArg_producesError() {
+        final int exitCode = Cli.run(new String[]{"   "}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void multipleEmptyArgs_producesError() {
+        // Multiple empty strings join to spaces only, which should fail parsing
+        final int exitCode = Cli.run(new String[]{"", "", ""}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void incompatibleUnits_producesError() {
+        // Volume-to-weight conversion should fail through the CLI
+        final int exitCode = Cli.run(new String[]{"2", "cups", "to", "grams"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void numericOnlyArg_producesError() {
+        final int exitCode = Cli.run(new String[]{"42"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void specialCharactersArg_producesError() {
+        final int exitCode = Cli.run(new String[]{"2", "cups!", "to", "ml"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void negativeNumberArg_producesError() {
+        final int exitCode = Cli.run(new String[]{"-5", "cups", "to", "ml"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
+
+    @Test
+    void errorOutput_containsErrorPrefix() {
+        // Verify that all error messages are prefixed with "Error: "
+        Cli.run(new String[]{"2", "blorg", "to", "ml"}, out, err);
+        assertThat(stderr()).startsWith("Error: ");
+    }
+
+    @Test
+    void incompleteConvertPatternArg_producesError() {
+        // "convert 5 cups" without target unit
+        final int exitCode = Cli.run(new String[]{"convert", "5", "cups"}, out, err);
+        assertThat(exitCode).isEqualTo(1);
+        assertThat(stderr()).contains("Error:");
+        assertThat(stdout()).isEmpty();
+    }
 }
