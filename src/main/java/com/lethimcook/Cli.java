@@ -7,8 +7,8 @@ import java.io.PrintStream;
  * <p>
  * Mirrors the Python {@code cli.py} behaviour: when no arguments are provided,
  * prints usage information and exits with code 1. When arguments are provided,
- * they are joined into a single query string and passed to the natural language
- * converter (to be integrated in a later milestone).
+ * they are joined into a single query string and passed to
+ * {@link NaturalConverter#convertNatural(String)}, printing the result to stdout.
  */
 public final class Cli {
 
@@ -46,13 +46,10 @@ public final class Cli {
      *   <li>If {@code args} is empty, prints a usage banner (application name, example
      *       invocations, and supported unit categories) to {@code out} and returns 1.</li>
      *   <li>Otherwise, joins all arguments with spaces into a single query string and
-     *       passes it to the natural language converter. On success the converted result
-     *       is printed to {@code out} and 0 is returned. On failure the error message
-     *       is printed to {@code err} and 1 is returned.</li>
+     *       passes it to {@link NaturalConverter#convertNatural(String)}. On success
+     *       the converted result is printed to {@code out} and 0 is returned. On failure
+     *       the error message is printed to {@code err} and 1 is returned.</li>
      * </ul>
-     * Note: NaturalConverter integration is deferred to Milestone 2; the current
-     * implementation always prints a placeholder message and returns 1 when arguments
-     * are provided.
      *
      * @param args command-line arguments representing a conversion query; may be empty
      * @param out  the stream to write normal output (usage banner, conversion results)
@@ -78,10 +75,9 @@ public final class Cli {
         final String query = String.join(" ", args);
 
         try {
-            // NaturalConverter integration deferred to Milestone 2.
-            // For now, indicate that natural language parsing is not yet available.
-            err.println("Natural language conversion not yet implemented. Query: " + query);
-            return 1;
+            final String result = NaturalConverter.convertNatural(query);
+            out.println(result);
+            return 0;
         } catch (Exception e) {
             err.println("Error: " + e.getMessage());
             return 1;
