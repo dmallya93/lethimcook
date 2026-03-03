@@ -14,13 +14,34 @@ public final class Converter {
     }
 
     /**
-     * Convert a value from one unit to another.
+     * Convert a numeric value from one measurement unit to another.
+     * <p>
+     * Both unit strings are normalized to lowercase before lookup. The method
+     * resolves each unit to its {@link UnitType} via {@link Units#getUnitType(String)}
+     * and verifies they belong to the same category (e.g. both VOLUME, both WEIGHT).
+     * <p>
+     * Conversion strategies by category:
+     * <ul>
+     *   <li><strong>Volume / Weight</strong> — uses a base-unit multiplication approach.
+     *       The value is first converted to the base unit (milliliters for volume, grams
+     *       for weight) by multiplying with the source unit's factor, then divided by the
+     *       target unit's factor.</li>
+     *   <li><strong>Temperature</strong> — delegates to {@link #convertTemperature(double, String, String)},
+     *       which routes through Celsius as an intermediate to handle the non-linear
+     *       Fahrenheit/Celsius/Kelvin formulas.</li>
+     *   <li><strong>Count</strong> — returns the value unchanged, since count units are
+     *       dimensionless and interchangeable.</li>
+     * </ul>
      *
-     * @param value    the numeric value to convert
-     * @param fromUnit the source unit (case-insensitive)
-     * @param toUnit   the target unit (case-insensitive)
-     * @return the converted value
-     * @throws IllegalArgumentException if units are unknown or incompatible
+     * @param value    the numeric value to convert (e.g. 2.0)
+     * @param fromUnit the source unit as a human-readable string (case-insensitive,
+     *                 whitespace-tolerant); must be a recognized alias such as "cups",
+     *                 "lb", "fahrenheit", or "ml"
+     * @param toUnit   the target unit (same constraints as {@code fromUnit}); must be
+     *                 in the same unit category as {@code fromUnit}
+     * @return the converted numeric value in the target unit
+     * @throws IllegalArgumentException if either unit string is not recognized, or if
+     *         the two units belong to different categories (e.g. converting cups to grams)
      */
     public static double convert(double value, String fromUnit, String toUnit) {
         String from = Units.normalizeUnit(fromUnit);
@@ -52,7 +73,27 @@ public final class Converter {
     }
 
     /**
-     * Convert temperature between different scales via Celsius as the intermediate.
+     * Convert a temperature value between Fahrenheit, Celsius, and Kelvin scales.
+     * <p>
+     * The conversion uses Celsius as the pivot: the input value is first translated
+     * to Celsius, then from Celsius to the target scale. This avoids a combinatorial
+     * explosion of direct formulas between every pair of scales.
+     * <p>
+     * Supported conversions:
+     * <ul>
+     *   <li>Fahrenheit to Celsius: {@code (value - 32) * 5 / 9}</li>
+     *   <li>Kelvin to Celsius: {@code value - 273.15}</li>
+     *   <li>Celsius to Fahrenheit: {@code celsius * 9 / 5 + 32}</li>
+     *   <li>Celsius to Kelvin: {@code celsius + 273.15}</li>
+     * </ul>
+     *
+     * @param value    the temperature value to convert
+     * @param fromUnit the source temperature scale, already normalized to lowercase
+     *                 (one of "celsius", "c", "fahrenheit", "f", "kelvin", "k")
+     * @param toUnit   the target temperature scale, already normalized to lowercase
+     * @return the converted temperature value in the target scale
+     * @throws IllegalArgumentException if either unit string does not match a known
+     *         temperature scale (should not occur when called from {@link #convert})
      */
     private static double convertTemperature(double value, String fromUnit, String toUnit) {
         // First convert to Celsius

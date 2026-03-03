@@ -161,21 +161,41 @@ public final class Units {
     // ── Helper methods ────────────────────────────────────────────────────────
 
     /**
-     * Normalize a unit string to lowercase and strip whitespace.
+     * Normalize a unit string to a canonical lowercase, whitespace-stripped form.
+     * <p>
+     * This is the first step in every unit lookup: the raw user-supplied string
+     * (e.g. "Cups", " TBSP ", "Fluid Ounce") is lowercased and leading/trailing
+     * whitespace is removed so that it can be matched against the keys in
+     * {@link #CONVERSIONS} and {@link #UNIT_TYPES}. Interior whitespace is preserved
+     * to support multi-word units like "fl oz" and "fluid ounce".
      *
-     * @param unit the raw unit string
-     * @return the normalized unit string
+     * @param unit the raw unit string provided by the caller; must not be {@code null}
+     * @return the normalized unit string suitable for map lookups
      */
     public static String normalizeUnit(String unit) {
         return unit.toLowerCase().strip();
     }
 
     /**
-     * Get the {@link UnitType} for a unit string.
+     * Resolve a unit string to its corresponding {@link UnitType} category.
+     * <p>
+     * The input is first passed through {@link #normalizeUnit(String)} to ensure
+     * case-insensitive, whitespace-tolerant matching, and then looked up in the
+     * {@link #UNIT_TYPES} map. If no entry is found, an {@link IllegalArgumentException}
+     * is thrown with a message identifying the unrecognized unit.
+     * <p>
+     * Example usage:
+     * <pre>{@code
+     * Units.getUnitType("Cups");       // returns UnitType.VOLUME
+     * Units.getUnitType("fahrenheit");  // returns UnitType.TEMPERATURE
+     * Units.getUnitType("xyz");         // throws IllegalArgumentException
+     * }</pre>
      *
-     * @param unit the unit string (case-insensitive, trimmed)
-     * @return the corresponding {@link UnitType}
-     * @throws IllegalArgumentException if the unit is not recognized
+     * @param unit the unit string to look up (case-insensitive, whitespace-tolerant);
+     *             must not be {@code null}
+     * @return the {@link UnitType} that the unit belongs to (VOLUME, WEIGHT,
+     *         TEMPERATURE, or COUNT)
+     * @throws IllegalArgumentException if the unit is not recognized in {@link #UNIT_TYPES}
      */
     public static UnitType getUnitType(String unit) {
         String normalized = normalizeUnit(unit);
