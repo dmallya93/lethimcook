@@ -1,5 +1,7 @@
 package com.lethimcook;
 
+import java.io.PrintStream;
+
 /**
  * Command-line interface for the lethimcook library.
  * <p>
@@ -20,19 +22,32 @@ public final class Cli {
      * @param args command-line arguments forming a natural-language conversion query
      */
     public static void main(String[] args) {
+        int exitCode = run(args, System.out, System.err);
+        System.exit(exitCode);
+    }
+
+    /**
+     * Executes the CLI logic, writing output to the provided streams.
+     *
+     * @param args command-line arguments
+     * @param out  standard output stream
+     * @param err  standard error stream
+     * @return exit code (0 for success, 1 for error/usage)
+     */
+    static int run(String[] args, PrintStream out, PrintStream err) {
         if (args.length == 0) {
-            System.out.println("LetHimCook - Unit Conversion Library");
-            System.out.println();
-            System.out.println("Usage:");
-            System.out.println("  lethimcook '2 cups to ml'");
-            System.out.println("  lethimcook 'convert 1 pound to grams'");
-            System.out.println("  lethimcook 'how many ml in 3 teaspoons'");
-            System.out.println();
-            System.out.println("Supported units:");
-            System.out.println("  Volume: tsp, tbsp, fl oz, cup, pint, quart, gallon, ml, liter");
-            System.out.println("  Weight: oz, pound, gram, kilogram");
-            System.out.println("  Temperature: fahrenheit, celsius, kelvin");
-            System.exit(1);
+            out.println("LetHimCook - Unit Conversion Library");
+            out.println();
+            out.println("Usage:");
+            out.println("  lethimcook '2 cups to ml'");
+            out.println("  lethimcook 'convert 1 pound to grams'");
+            out.println("  lethimcook 'how many ml in 3 teaspoons'");
+            out.println();
+            out.println("Supported units:");
+            out.println("  Volume: tsp, tbsp, fl oz, cup, pint, quart, gallon, ml, liter");
+            out.println("  Weight: oz, pound, gram, kilogram");
+            out.println("  Temperature: fahrenheit, celsius, kelvin");
+            return 1;
         }
 
         String query = String.join(" ", args);
@@ -40,11 +55,11 @@ public final class Cli {
         try {
             // NaturalConverter integration deferred to Milestone 2.
             // For now, indicate that natural language parsing is not yet available.
-            System.err.println("Natural language conversion not yet implemented. Query: " + query);
-            System.exit(1);
+            err.println("Natural language conversion not yet implemented. Query: " + query);
+            return 1;
         } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-            System.exit(1);
+            err.println("Error: " + e.getMessage());
+            return 1;
         }
     }
 }
